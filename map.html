@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indonesia Choropleth Map</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+      }
+      #map {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .province {
+        stroke: #fff;
+        stroke-width: 0.5px;
+        transition: all 0.3s;
+      }
+      .province:hover {
+        stroke-width: 2px;
+        filter: brightness(1.1);
+      }
+      #tooltip {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 5px;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="tooltip"></div>
+
+    <script>
+      const width = 960;
+      const height = 600;
+
+      const svg = d3.select("#map").append("svg").attr("width", width).attr("height", height).attr("viewBox", [0, 0, width, height]).attr("style", "max-width: 100%; height: auto;");
+
+      const projection = d3
+        .geoMercator()
+        .center([118, -2])
+        .scale(1000)
+        .translate([width / 2, height / 2]);
+
+      const path = d3.geoPath().projection(projection);
+
+      const color = d3.scaleSequential(d3.interpolateBlues).domain([0, 1000000]);
+
+      // Dummy data untuk jumlah wisatawan mancanegara per provinsi
+      const visitorData = {
+        ACEH: 50000,
+        "SUMATERA UTARA": 250000,
+        "SUMATERA BARAT": 150000,
+        RIAU: 100000,
+        JAMBI: 75000,
+        "SUMATERA SELATAN": 120000,
+        BENGKULU: 40000,
+        LAMPUNG: 80000,
+        "KEPULAUAN BANGKA BELITUNG": 60000,
+        "KEPULAUAN RIAU": 300000,
+        "DKI JAKARTA": 800000,
+        "JAWA BARAT": 500000,
+        "JAWA TENGAH": 400000,
+        "DI YOGYAKARTA": 350000,
+        "JAWA TIMUR": 600000,
+        BANTEN: 200000,
+        BALI: 1000000,
+        "NUSA TENGGARA BARAT": 300000,
+        "NUSA TENGGARA TIMUR": 150000,
+        "KALIMANTAN BARAT": 100000,
+        "KALIMANTAN TENGAH": 75000,
+        "KALIMANTAN SELATAN": 90000,
+        "KALIMANTAN TIMUR": 120000,
+        "KALIMANTAN UTARA": 50000,
+        "SULAWESI UTARA": 180000,
+        "SULAWESI TENGAH": 80000,
+        "SULAWESI SELATAN": 250000,
+        "SULAWESI TENGGARA": 70000,
+        GORONTALO: 40000,
+        "SULAWESI BARAT": 50000,
+        MALUKU: 60000,
+        "MALUKU UTARA": 45000,
+        "PAPUA BARAT": 55000,
+        PAPUA: 75000,
+      };
+
+      // Load GeoJSON data
+      d3.json("prov.geojson")
+        .then(function (indonesia) {
+          svg
+            .selectAll("path")
+            .data(indonesia.features)
+            .enter()
+            .append("path")
+            .attr("d", path)
+            .attr("class", "province")
+            .attr("fill", function (d) {
+              const provinceName = d.properties.name;
+              const visitorCount = visitorData[provinceName];
+              return color(visitorCount || 0);
+            })
+            .on("mouseover", function (event, d) {
+              const provinceName = d.properties.name;
+              const visitors = visitorData[provinceName] || 0;
+              d3.select(this).attr("stroke-width", "2px");
+              d3.select("#tooltip")
+                .style("opacity", 1)
+                .style("left", event.pageX + 10 + "px")
+                .style("top", event.pageY - 28 + "px")
+                .html(`<strong>${provinceName}</strong><br>Visitors: ${visitors.toLocaleString()}`);
+            })
+            .on("mouseout", function () {
+              d3.select(this).attr("stroke-width", "0.5px");
+              d3.select("#tooltip").style("opacity", 0);
+            });
+
+          // Add legend
+          const legendWidth = 500;
+          const legendHeight = 20;
+          const legend = svg.append("g").attr("transform", `translate(${width - legendWidth - 20}, ${height - 50})`);
+
+          const legendScale = d3.scaleLinear().domain([0, 1000000]).range([0, legendWidth]);
+
+          const legendAxis = d3.axisBottom(legendScale).tickSize(legendHeight).tickFormat(d3.format(".0s"));
+
+          legend.append("g").call(legendAxis);
+
+          const legendGradient = legend.append("linearGradient").attr("id", "legend-gradient").attr("x1", "0%").attr("y1", "0%").attr("x2", "100%").attr("y2", "0%");
+
+          legendGradient
+            .selectAll("stop")
+            .data(color.ticks().map((t, i, n) => ({ offset: `${(100 * i) / n.length}%`, color: color(t) })))
+            .enter()
+            .append("stop")
+            .attr("offset", (d) => d.offset)
+            .attr("stop-color", (d) => d.color);
+
+          legend.append("rect").attr("width", legendWidth).attr("height", legendHeight).style("fill", "url(#legend-gradient)");
+        })
+        .catch(function (error) {
+          console.error("Error loading GeoJSON:", error);
+        });
+    </script>
+  </body>
+</html>

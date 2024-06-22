@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sankey Diagram</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12/dist/d3-sankey.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1><a href="/visualisasi.html">Home</a></h1>
+    </div>
+    <div class="main-container">
+      <div class="empty-column"></div>
+      <div class="container">
+        <h2>Chord Diagram</h2>
+        <div class="chord">
+          <p>
+            Chord diagram adalah representasi visual dari hubungan antar data dalam bentuk lingkaran. Diagram ini biasanya digunakan untuk menampilkan data yang memiliki banyak keterkaitan atau koneksi antara berbagai kategori atau entitas.
+          </p>
+          <h3>Jumlah Wisatawan Mancanegara dan Wisatawan Nasional</h3>
+          <div id="chord-diagram"></div>
+          <p>
+            Implementasi Chord Diagram dimulai dengan memproses data dari file CSV menjadi matriks hubungan antar entitas. Konfigurasi diagram meliputi penentuan dimensi, radius, dan skala warna. Layout chord dibuat menggunakan d3.chord(),
+            dilengkapi dengan fungsi arc dan ribbon untuk menggambar elemen-elemen diagram.
+          </p>
+          <p>
+            Visualisasi dibangun dalam container SVG, dimulai dengan penggambaran grup-grup entitas dan label-labelnya. Chord atau pita penghubung kemudian ditambahkan, mewakili hubungan antar entitas. Interaktivitas ditingkatkan melalui
+            event listener untuk highlight dan reset, serta penambahan tooltip informasi.
+          </p>
+        </div>
+        <h2>Choropleth Map</h2>
+        <div class="chropleth">
+          <p>
+            Choropleth adalah jenis peta tematik yang menggunakan perbedaan dalam pewarnaan atau pengisian untuk menunjukkan nilai statistik tertentu di berbagai wilayah geografis. Peta ini sering digunakan untuk menampilkan data yang
+            terkait dengan wilayah administratif, seperti negara, negara bagian, provinsi, atau kotamadya.
+          </p>
+          <div id="map"></div>
+          <div id="tooltip"></div>
+          <p>
+            Implementasi Choropleth Map menggunakan D3.js dimulai dengan mendefinisikan dimensi peta dan menyiapkan data jumlah wisatawan per provinsi. SVG container dibuat untuk menampung peta, termasuk judul di bagian atas. Proyeksi peta
+            menggunakan Mercator diatur untuk fokus pada wilayah Indonesia.
+          </p>
+          <p>
+            Skala warna biru bertingkat dibuat untuk merepresentasikan jumlah wisatawan, dengan warna lebih gelap menunjukkan jumlah yang lebih tinggi. Data GeoJSON Indonesia dimuat dan digunakan untuk menggambar bentuk provinsi. Setiap
+            provinsi diwarnai sesuai jumlah wisatawannya dan diberi interaktivitas berupa hover effect yang menampilkan tooltip dengan informasi detail.
+          </p>
+          <p>
+            Legend ditambahkan di bagian bawah peta untuk membantu interpretasi warna. Gradient warna digunakan pada legend untuk menunjukkan rentang nilai dari terendah hingga tertinggi. Axis ditambahkan pada legend untuk menunjukkan nilai
+            numerik yang sesuai dengan setiap tingkat warna.
+          </p>
+        </div>
+        <h2>Scatter Plot Matrix</h2>
+        <div class="scatter">
+          <p>
+            Scatter plot matrix adalah alat visualisasi yang digunakan untuk memplot beberapa scatter plot dalam satu grid, yang memungkinkan untuk melihat hubungan antara beberapa pasangan variabel sekaligus. Ini sangat berguna dalam
+            analisis data eksploratif untuk mengidentifikasi korelasi atau pola antar variabel.
+          </p>
+          <h3>Scatter Plot Matrix antara Jumlah Wisatawan, PDB Per Kapita dan Jumlah Kamar Hotel Terpakai</h3>
+          <div id="provinsi-selector"></div>
+          <div id="chart"></div>
+          <p>
+            Pembuatan matriks scatter plot dimulai dengan mendefinisikan data provinsi yang berisi jumlah wisatawan, PDB per kapita, dan kamar hotel terpakai. Grafik tersebut dibuat menggunakan D3.js dengan lebar dan tinggi yang ditentukan
+            serta padding untuk memberikan ruang di sekitar elemen. Scatter plot matrix ini menggambar grafik 3x3 dengan setiap sel menunjukkan hubungan antara dua variabel dari data. Skala linear dibuat untuk setiap kolom data agar
+            memetakan nilai ke ukuran sel. Lingkaran menggambarkan poin data, dengan tooltip ditambahkan untuk menampilkan informasi saat poin tersebut dihover. Sebuah dropdown dengan checkbox memungkinkan pengguna untuk memilih provinsi
+            yang ingin ditampilkan. Fungsi pembaruan memperbarui grafik sesuai dengan provinsi yang dipilih.
+          </p>
+        </div>
+        <!-- <h2>Scatter Plot Animated: Wisatawan vs PDRB (2016-2023)</h2> -->
+        <!-- <div class="scatter_plot">
+          <p>
+            Scatter plot yang bergerak (animated scatter plot) adalah jenis scatter plot di mana titik-titik data bergerak atau berubah dari waktu ke waktu, sering kali untuk menunjukkan bagaimana data berubah sepanjang periode waktu
+            tertentu. Ini sering digunakan untuk memperlihatkan tren atau perubahan data dari tahun ke tahun atau dari waktu ke waktu.
+          </p>
+          <div id="chart_scatter"></div>
+        </div> -->
+      </div>
+      <div class="empty-column"></div>
+    </div>
+    <footer>
+      <p>&copy; 2024 Andi Ardiansyah Nasir</p>
+    </footer>
+    <script src="chord.js"></script>
+    <script src="map.js"></script>
+    <script src="scatter.js"></script>
+    <!-- <script src="scatter_plot.js"></script> -->
+  </body>
+</html>

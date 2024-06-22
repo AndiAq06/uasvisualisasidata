@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scatter Matrix with D3.js</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      .cell {
+        fill: none;
+        stroke: #ccc;
+      }
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #ddd;
+        shape-rendering: crispEdges;
+      }
+      .label {
+        font-weight: bold;
+        font-size: 12px;
+      }
+      #provinsi-selector {
+        margin-bottom: 20px;
+      }
+      .dropdown-check-list {
+        display: inline-block;
+      }
+      .dropdown-check-list .anchor {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+        padding: 5px 50px 5px 10px;
+        border: 1px solid #ccc;
+      }
+      .dropdown-check-list .anchor:after {
+        position: absolute;
+        content: "";
+        border-left: 2px solid black;
+        border-top: 2px solid black;
+        padding: 5px;
+        right: 10px;
+        top: 20%;
+        -moz-transform: rotate(-135deg);
+        -ms-transform: rotate(-135deg);
+        -o-transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+        transform: rotate(-135deg);
+      }
+      .dropdown-check-list .anchor:active:after {
+        right: 8px;
+        top: 21%;
+      }
+      .dropdown-check-list ul.items {
+        padding: 2px;
+        display: none;
+        margin: 0;
+        border: 1px solid #ccc;
+        border-top: none;
+      }
+      .dropdown-check-list ul.items li {
+        list-style: none;
+      }
+      .dropdown-check-list.visible .anchor {
+        color: #0094ff;
+      }
+      .dropdown-check-list.visible .items {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="provinsi-selector"></div>
+    <div id="chart"></div>
+
+    <script>
+      // Data untuk 34 provinsi (sama seperti sebelumnya)
+      const data = [
+        { provinsi: "DKI Jakarta", wisatawan: 1000000, pdb_perkapita: 15000000, kamar_hotel_terpakai: 8000 },
+        { provinsi: "Bali", wisatawan: 800000, pdb_perkapita: 12000000, kamar_hotel_terpakai: 6000 },
+        { provinsi: "Jawa Barat", wisatawan: 500000, pdb_perkapita: 9000000, kamar_hotel_terpakai: 4000 },
+        { provinsi: "Jawa Timur", wisatawan: 300000, pdb_perkapita: 8000000, kamar_hotel_terpakai: 3000 },
+        { provinsi: "Sumatera Utara", wisatawan: 200000, pdb_perkapita: 7000000, kamar_hotel_terpakai: 2000 },
+        { provinsi: "Jawa Tengah", wisatawan: 450000, pdb_perkapita: 8500000, kamar_hotel_terpakai: 3500 },
+        { provinsi: "Yogyakarta", wisatawan: 350000, pdb_perkapita: 9500000, kamar_hotel_terpakai: 2800 },
+        { provinsi: "Sulawesi Selatan", wisatawan: 180000, pdb_perkapita: 7500000, kamar_hotel_terpakai: 1800 },
+        { provinsi: "Sumatera Barat", wisatawan: 150000, pdb_perkapita: 6800000, kamar_hotel_terpakai: 1500 },
+        { provinsi: "Banten", wisatawan: 220000, pdb_perkapita: 8200000, kamar_hotel_terpakai: 2200 },
+        { provinsi: "Riau", wisatawan: 130000, pdb_perkapita: 9800000, kamar_hotel_terpakai: 1300 },
+        { provinsi: "Lampung", wisatawan: 110000, pdb_perkapita: 6500000, kamar_hotel_terpakai: 1100 },
+        { provinsi: "Kalimantan Timur", wisatawan: 160000, pdb_perkapita: 11000000, kamar_hotel_terpakai: 1600 },
+        { provinsi: "Sulawesi Utara", wisatawan: 140000, pdb_perkapita: 7200000, kamar_hotel_terpakai: 1400 },
+        { provinsi: "Nusa Tenggara Barat", wisatawan: 250000, pdb_perkapita: 6000000, kamar_hotel_terpakai: 2500 },
+        { provinsi: "Kalimantan Selatan", wisatawan: 120000, pdb_perkapita: 8000000, kamar_hotel_terpakai: 1200 },
+        { provinsi: "Sumatera Selatan", wisatawan: 100000, pdb_perkapita: 7300000, kamar_hotel_terpakai: 1000 },
+        { provinsi: "Kepulauan Riau", wisatawan: 170000, pdb_perkapita: 10000000, kamar_hotel_terpakai: 1700 },
+        { provinsi: "Kalimantan Barat", wisatawan: 90000, pdb_perkapita: 6700000, kamar_hotel_terpakai: 900 },
+        { provinsi: "Papua", wisatawan: 70000, pdb_perkapita: 8500000, kamar_hotel_terpakai: 700 },
+        { provinsi: "Aceh", wisatawan: 80000, pdb_perkapita: 6200000, kamar_hotel_terpakai: 800 },
+        { provinsi: "Sulawesi Tengah", wisatawan: 60000, pdb_perkapita: 6800000, kamar_hotel_terpakai: 600 },
+        { provinsi: "Kalimantan Tengah", wisatawan: 50000, pdb_perkapita: 7800000, kamar_hotel_terpakai: 500 },
+        { provinsi: "Sulawesi Tenggara", wisatawan: 40000, pdb_perkapita: 6500000, kamar_hotel_terpakai: 400 },
+        { provinsi: "Jambi", wisatawan: 55000, pdb_perkapita: 7000000, kamar_hotel_terpakai: 550 },
+        { provinsi: "Papua Barat", wisatawan: 30000, pdb_perkapita: 8800000, kamar_hotel_terpakai: 300 },
+        { provinsi: "Nusa Tenggara Timur", wisatawan: 85000, pdb_perkapita: 5500000, kamar_hotel_terpakai: 850 },
+        { provinsi: "Bengkulu", wisatawan: 35000, pdb_perkapita: 6300000, kamar_hotel_terpakai: 350 },
+        { provinsi: "Maluku", wisatawan: 45000, pdb_perkapita: 6000000, kamar_hotel_terpakai: 450 },
+        { provinsi: "Bangka Belitung", wisatawan: 75000, pdb_perkapita: 7500000, kamar_hotel_terpakai: 750 },
+        { provinsi: "Sulawesi Barat", wisatawan: 25000, pdb_perkapita: 5800000, kamar_hotel_terpakai: 250 },
+        { provinsi: "Gorontalo", wisatawan: 20000, pdb_perkapita: 6100000, kamar_hotel_terpakai: 200 },
+        { provinsi: "Maluku Utara", wisatawan: 15000, pdb_perkapita: 5900000, kamar_hotel_terpakai: 150 },
+        { provinsi: "Kalimantan Utara", wisatawan: 10000, pdb_perkapita: 9500000, kamar_hotel_terpakai: 100 },
+      ];
+
+      const width = 900;
+      const height = 960;
+      const padding = 50;
+      const cellSize = (width - padding * 2) / 3;
+
+      const columns = ["wisatawan", "pdb_perkapita", "kamar_hotel_terpakai"];
+
+      const svg = d3.select("#chart").append("svg").attr("width", width).attr("height", height);
+
+      const scales = {};
+      columns.forEach((col) => {
+        scales[col] = d3
+          .scaleLinear()
+          .domain(d3.extent(data, (d) => d[col]))
+          .range([padding, cellSize - padding]);
+      });
+
+      const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+      // Fungsi untuk menggambar scatter plot matrix
+      function drawScatterPlotMatrix(selectedData) {
+        svg.selectAll("*").remove();
+
+        selectedData.forEach((d, i) => {
+          colorScale(d.provinsi);
+        });
+
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            plotCell(i, j, selectedData);
+          }
+        }
+
+        // Tambahkan legend
+        const legend = svg.append("g").attr("transform", `translate(${width - 90}, 20)`);
+
+        legend
+          .selectAll("rect")
+          .data(selectedData)
+          .enter()
+          .append("rect")
+          .attr("x", 0)
+          .attr("y", (d, i) => i * 20)
+          .attr("width", 10)
+          .attr("height", 10)
+          .attr("fill", (d) => colorScale(d.provinsi));
+
+        legend
+          .selectAll("text")
+          .data(selectedData)
+          .enter()
+          .append("text")
+          .attr("x", 15)
+          .attr("y", (d, i) => i * 20 + 9)
+          .text((d) => d.provinsi)
+          .attr("font-size", "8px");
+      }
+
+      function plotCell(i, j, selectedData) {
+        const cell = svg.append("g").attr("transform", `translate(${j * cellSize}, ${i * cellSize})`);
+
+        cell.append("rect").attr("class", "cell").attr("width", cellSize).attr("height", cellSize);
+
+        const xCol = columns[j];
+        const yCol = columns[i];
+
+        if (i !== j) {
+          const points = cell
+            .selectAll(".point")
+            .data(selectedData)
+            .enter()
+            .append("circle")
+            .attr("class", "point")
+            .attr("cx", (d) => scales[xCol](d[xCol]))
+            .attr("cy", (d) => cellSize - scales[yCol](d[yCol]))
+            .attr("r", 5)
+            .attr("fill", (d) => colorScale(d.provinsi))
+            .attr("opacity", 0.7);
+        } else {
+          cell
+            .append("text")
+            .attr("class", "label")
+            .attr("x", cellSize / 2)
+            .attr("y", cellSize / 2)
+            .attr("text-anchor", "middle")
+            .attr("alignment-baseline", "middle")
+            .text(xCol);
+        }
+
+        // Add x-axis
+        if (i === 2) {
+          const xAxis = d3.axisBottom(scales[xCol]).ticks(5);
+          cell.append("g").attr("transform", `translate(0, ${cellSize})`).call(xAxis);
+        }
+
+        // Add y-axis
+        if (j === 0) {
+          const yAxis = d3
+            .axisLeft(
+              d3
+                .scaleLinear()
+                .domain(scales[yCol].domain())
+                .range([cellSize - padding, padding])
+            )
+            .ticks(5);
+          cell.append("g").attr("transform", `translate(0, 0)`).call(yAxis);
+        }
+      }
+
+      // Fungsi untuk membuat dropdown dengan checkbox
+      function createProvinsiDropdownCheckbox() {
+        const container = d3.select("#provinsi-selector");
+
+        const dropdownCheckList = container.append("div").attr("class", "dropdown-check-list").attr("tabindex", "100");
+
+        dropdownCheckList
+          .append("span")
+          .attr("class", "anchor")
+          .text("Pilih Provinsi")
+          .on("click", function () {
+            if (dropdownCheckList.classed("visible")) {
+              dropdownCheckList.classed("visible", false);
+            } else {
+              dropdownCheckList.classed("visible", true);
+            }
+          });
+
+        const ul = dropdownCheckList.append("ul").attr("class", "items");
+
+        ul.selectAll("li")
+          .data(data)
+          .enter()
+          .append("li")
+          .append("input")
+          .attr("type", "checkbox")
+          .attr("id", (d, i) => `provinsi-${i}`)
+          .attr("value", (d) => d.provinsi)
+          .property("checked", (d, i) => i < 10)
+          .on("change", updateSelectedProvinsi);
+
+        ul.selectAll("li")
+          .append("label")
+          .attr("for", (d, i) => `provinsi-${i}`)
+          .text((d) => d.provinsi);
+      }
+
+      // Fungsi untuk memperbarui provinsi yang dipilih
+      function updateSelectedProvinsi() {
+        const selectedProvinsi = d3
+          .selectAll("input:checked")
+          .nodes()
+          .map((node) => node.value);
+
+        if (selectedProvinsi.length < 10) {
+          alert("Minimal 10 provinsi harus dipilih!");
+          this.checked = true;
+          return;
+        }
+
+        const selectedData = data.filter((d) => selectedProvinsi.includes(d.provinsi));
+        drawScatterPlotMatrix(selectedData);
+      }
+
+      // Inisialisasi
+      createProvinsiDropdownCheckbox();
+      const initialSelectedData = data.slice(0, 10);
+      drawScatterPlotMatrix(initialSelectedData);
+    </script>
+  </body>
+</html>
