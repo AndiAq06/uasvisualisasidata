@@ -36,8 +36,8 @@ const data = [
   { provinsi: "Papua", wisatawan: 1278581, pdb_perkapita: 78061.39, kamar_hotel_terpakai: 432.35 },
 ];
 
-const width = 800;
-const height = 700;
+const width = 700;
+const height = 600;
 const padding = 50;
 const cellSize = (width - padding * 2) / 3;
 
@@ -106,7 +106,7 @@ function drawScatterPlotMatrix(selectedData) {
     .attr("x", 15)
     .attr("y", (d, i) => i * 20 + 9)
     .text((d) => d.provinsi)
-    .attr("font-size", "16px");
+    .attr("font-size", "10px");
 }
 
 function plotCell(i, j, selectedData) {

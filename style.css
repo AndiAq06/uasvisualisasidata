@@ -12,12 +12,13 @@ p {
   background-color: #38a070;
   color: white;
   text-align: center;
-  padding: 1rem;
+  padding: 0.4rem;
 }
 
 .header a {
   text-decoration: none;
   color: white;
+  font-size: 30px;
 }
 .main-container {
   display: flex;
@@ -45,14 +46,14 @@ p {
 }
 
 .container h2 {
-  font-size: 37px;
+  font-size: 25px;
   margin: 10px 20px;
 }
 
 .container .chord p {
-  font-size: 25px;
+  font-size: 18px;
   text-align: justify;
-  margin: 10px 20px;
+  margin: 5px 20px;
 }
 
 .container .chropleth {
@@ -62,15 +63,10 @@ p {
   align-items: center;
 }
 
-.container h2 {
-  font-size: 37px;
-  margin: 10px 20px;
-}
-
 .container .chropleth p {
-  font-size: 25px;
+  font-size: 18px;
   text-align: justify;
-  margin: 10px 20px;
+  margin: 5px 20px;
 }
 
 .container .scatter {
@@ -80,15 +76,10 @@ p {
   align-items: center;
 }
 
-.container h2 {
-  font-size: 37px;
-  margin: 10px 20px;
-}
-
 .container .scatter p {
-  font-size: 25px;
+  font-size: 18px;
   text-align: justify;
-  margin: 10px 20px;
+  margin: 5px 20px;
 }
 
 .container .scatter_plot {
@@ -98,15 +89,15 @@ p {
   align-items: center;
 }
 
-.container h2 {
+/* .container h2 {
   font-size: 37px;
   margin: 10px 20px;
-}
+} */
 
 .container .scatter_plot p {
-  font-size: 25px;
+  font-size: 18px;
   text-align: justify;
-  margin: 10px 20px;
+  margin: 5px 20px;
 }
 #sankey-diagram {
   width: 100%;
@@ -215,10 +206,10 @@ footer {
   justify-content: center;
   background: #38a070;
   margin-top: 20px;
-  height: 100px;
+  height: 50px;
 }
 
 footer p {
   color: #fff;
-  font-size: 30px;
+  font-size: 20px;
 }

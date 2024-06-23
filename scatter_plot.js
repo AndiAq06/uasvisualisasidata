@@ -27,9 +27,9 @@ const dataScatter = [
 ];
 
 // Dimensi dan margin
-const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-//   const width = 800 - margin.left - margin.right;
-//   const height = 600 - margin.top - margin.bottom;
+const margin = { top: 20, right: 20, bottom: 50, left: 70 };
+// const width = 800 - margin.left - margin.right;
+// const height = 600 - margin.top - margin.bottom;
 
 // Skala untuk sumbu x dan y
 const x = d3.scaleLinear().range([0, width]);
@@ -40,6 +40,11 @@ const radius = d3.scaleSqrt().range([2, 20]);
 
 // Skala warna
 const colorScatter = d3.scaleOrdinal(d3.schemeCategory10);
+
+// Variabel untuk mengontrol animasi
+let animationInterval;
+let isPaused = false;
+let currentYear = 2016;
 
 // Fungsi untuk membuat chart
 function createChart() {
@@ -57,7 +62,14 @@ function createChart() {
 
   xAxis.append("text").attr("x", width).attr("y", 40).attr("fill", "black").attr("text-anchor", "end").text("PDRB →");
 
-  yAxis.append("text").attr("transform", "rotate(-90)").attr("y", 10).attr("fill", "black").attr("text-anchor", "end").text("↑ Jumlah Wisatawan");
+  yAxis
+    .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -60)
+    .attr("x", -height / 2)
+    .attr("fill", "black")
+    .attr("text-anchor", "middle")
+    .text("↑ Jumlah Wisatawan");
 
   const circlesGroup = g.append("g");
 
@@ -76,7 +88,10 @@ function createChart() {
     radius.domain([0, d3.max(dataScatter, (d) => d.wisatawan)]);
 
     xAxis.transition().duration(750).call(d3.axisBottom(x));
-    yAxis.transition().duration(750).call(d3.axisLeft(y));
+    yAxis
+      .transition()
+      .duration(750)
+      .call(d3.axisLeft(y).tickFormat(d3.format(".2s")));
 
     const circles = circlesGroup.selectAll("circle").data(filteredData, (d) => d.name);
 
@@ -105,7 +120,7 @@ function createChart() {
           .attr("y", y(d.wisatawan) + margin.top - 10)
           .attr("text-anchor", "middle")
           .attr("font-size", "12px")
-          .text(`${d.name}: Wisatawan ${d.wisatawan}, PDRB ${d.pdrb}`);
+          .text(`${d.name}: Wisatawan ${d3.format(",")(d.wisatawan)}, PDRB ${d3.format(",")(d.pdrb)}`);
       })
       .on("mouseout", function () {
         d3.select(this).attr("stroke", null);
@@ -121,9 +136,31 @@ function createChart() {
 // Membuat chart
 const chart = createChart();
 
-// Animasi
-let currentYear = 2016;
-setInterval(() => {
-  currentYear = currentYear === 2023 ? 2016 : currentYear + 1;
-  chart.update(currentYear);
-}, 1000);
+// Fungsi untuk mengontrol animasi
+function toggleAnimation() {
+  if (isPaused) {
+    startAnimation();
+    d3.select("#pauseButton").text("Pause");
+  } else {
+    pauseAnimation();
+    d3.select("#pauseButton").text("Resume");
+  }
+  isPaused = !isPaused;
+}
+
+function startAnimation() {
+  animationInterval = setInterval(() => {
+    currentYear = currentYear === 2023 ? 2016 : currentYear + 1;
+    chart.update(currentYear);
+  }, 1000);
+}
+
+function pauseAnimation() {
+  clearInterval(animationInterval);
+}
+
+// Menambahkan tombol pause
+d3.select("#chart_scatter").append("button").attr("id", "pauseButton").text("Pause").on("click", toggleAnimation);
+
+// Memulai animasi
+startAnimation();

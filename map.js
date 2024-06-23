@@ -1,4 +1,4 @@
-const mapWidth = 1200; // Perbaikan: menghapus 'x' di akhir
+const mapWidth = 1300; // Perbaikan: menghapus 'x' di akhir
 const mapHeight = 600;
 const titleHeight = 50; // Tinggi untuk judul
 
@@ -57,7 +57,7 @@ mapSvg
   .attr("dominant-baseline", "middle")
   .style("font-size", "30px")
   .style("font-weight", "bold")
-  .text("Jumlah Wisatawan Mancanegara yang Datang di Tiap Provinsi Tahun 2023");
+  .text("Jumlah Wisatawan Nusantara Menurut Provinsi Awal");
 
 // Buat grup untuk peta dan geser ke bawah untuk memberi ruang pada judul
 const mapGroup = mapSvg.append("g").attr("transform", `translate(0, ${titleHeight})`);
@@ -118,7 +118,7 @@ d3.json("prov.geojson")
     // Perbaiki legend
     const legendWidth = 500;
     const legendHeight = 20;
-    const legend = mapGroup.append("g").attr("transform", `translate(${mapWidth - legendWidth - 20}, ${mapHeight - 150})`);
+    const legend = mapGroup.append("g").attr("transform", `translate(${mapWidth - legendWidth - 120}, ${mapHeight - 150})`);
 
     const legendScale = d3.scaleLinear().domain([0, 250000000]).range([0, legendWidth]);
 

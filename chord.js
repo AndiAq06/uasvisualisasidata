@@ -12,8 +12,8 @@ async function drawChord() {
   }
 
   // Define the dimensions of the chart
-  const width = 550;
-  const height = 550;
+  const width = 450;
+  const height = 450;
   const outerRadius = Math.min(width, height) * 0.5 - 60;
   const innerRadius = outerRadius - 20;
 

@@ -67,14 +67,24 @@
             yang ingin ditampilkan. Fungsi pembaruan memperbarui grafik sesuai dengan provinsi yang dipilih.
           </p>
         </div>
-        <!-- <h2>Scatter Plot Animated: Wisatawan vs PDRB (2016-2023)</h2> -->
-        <!-- <div class="scatter_plot">
+        <h2>Scatter Plot Animated: Wisatawan vs PDRB (2016-2023)</h2>
+        <div class="scatter_plot">
           <p>
             Scatter plot yang bergerak (animated scatter plot) adalah jenis scatter plot di mana titik-titik data bergerak atau berubah dari waktu ke waktu, sering kali untuk menunjukkan bagaimana data berubah sepanjang periode waktu
             tertentu. Ini sering digunakan untuk memperlihatkan tren atau perubahan data dari tahun ke tahun atau dari waktu ke waktu.
           </p>
           <div id="chart_scatter"></div>
-        </div> -->
+          <p>
+            Pembuatan visualisasi dimulai dengan menyiapkan data dummy yang mewakili jumlah wisatawan dan PDRB untuk tiga daerah dari tahun 2016 hingga 2023. Selanjutnya, dimensi dan margin untuk grafik ditentukan, diikuti dengan pembuatan
+            skala untuk sumbu x, y, ukuran lingkaran, dan warna. Fungsi utama createChart() dibuat untuk mengatur elemen SVG, sumbu, dan grup untuk lingkaran. Di dalam fungsi ini, metode update() didefinisikan untuk memperbarui visualisasi
+            berdasarkan tahun yang dipilih.
+          </p>
+          <p>
+            Animasi diimplementasikan menggunakan setInterval, yang memanggil fungsi update() setiap detik. Tombol pause/resume ditambahkan untuk mengontrol animasi, dengan fungsi toggleAnimation() yang menghentikan atau melanjutkan
+            animasi. Interaktivitas ditingkatkan dengan menambahkan event listener untuk mouseover dan mouseout pada setiap lingkaran, menampilkan tooltip saat kursor diarahkan ke titik data.
+          </p>
+          <p>Terakhir, chart diinisialisasi dan animasi dimulai. Kode ini menghasilkan visualisasi yang dinamis dan informatif, menggambarkan tren pariwisata dan PDRB di tiga daerah Indonesia selama periode delapan tahun.</p>
+        </div>
       </div>
       <div class="empty-column"></div>
     </div>
@@ -84,6 +94,6 @@
     <script src="chord.js"></script>
     <script src="map.js"></script>
     <script src="scatter.js"></script>
-    <!-- <script src="scatter_plot.js"></script> -->
+    <script src="scatter_plot.js"></script>
   </body>
 </html>
