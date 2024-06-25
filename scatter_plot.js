@@ -1,31 +1,3 @@
-// Data dummy untuk jumlah wisatawan dan PDRB dari 2016-2023
-const dataScatter = [
-  { year: 2016, name: "Bali", wisatawan: 4000000, pdrb: 500000 },
-  { year: 2016, name: "Jakarta", wisatawan: 3000000, pdrb: 70000 },
-  { year: 2016, name: "Yogyakarta", wisatawan: 2000000, pdrb: 30000 },
-  { year: 2017, name: "Bali", wisatawan: 5000000, pdrb: 550000 },
-  { year: 2017, name: "Jakarta", wisatawan: 3200000, pdrb: 75000 },
-  { year: 2017, name: "Yogyakarta", wisatawan: 2200000, pdrb: 35000 },
-  { year: 2018, name: "Bali", wisatawan: 6000000, pdrb: 60000 },
-  { year: 2018, name: "Jakarta", wisatawan: 3400000, pdrb: 80000 },
-  { year: 2018, name: "Yogyakarta", wisatawan: 2400000, pdrb: 40000 },
-  { year: 2019, name: "Bali", wisatawan: 900000, pdrb: 65000 },
-  { year: 2019, name: "Jakarta", wisatawan: 3600000, pdrb: 85000 },
-  { year: 2019, name: "Yogyakarta", wisatawan: 2600000, pdrb: 45000 },
-  { year: 2020, name: "Bali", wisatawan: 3000000, pdrb: 55000 },
-  { year: 2020, name: "Jakarta", wisatawan: 2500000, pdrb: 80000 },
-  { year: 2020, name: "Yogyakarta", wisatawan: 1800000, pdrb: 40000 },
-  { year: 2021, name: "Bali", wisatawan: 3500000, pdrb: 60000 },
-  { year: 2021, name: "Jakarta", wisatawan: 3000000, pdrb: 85000 },
-  { year: 2021, name: "Yogyakarta", wisatawan: 2000000, pdrb: 42000 },
-  { year: 2022, name: "Bali", wisatawan: 5000000, pdrb: 70000 },
-  { year: 2022, name: "Jakarta", wisatawan: 4000000, pdrb: 95000 },
-  { year: 2022, name: "Yogyakarta", wisatawan: 2500000, pdrb: 47000 },
-  { year: 2023, name: "Bali", wisatawan: 6000000, pdrb: 80000 },
-  { year: 2023, name: "Jakarta", wisatawan: 4500000, pdrb: 100000 },
-  { year: 2023, name: "Yogyakarta", wisatawan: 3000000, pdrb: 50000 },
-];
-
 // Dimensi dan margin
 const margin = { top: 20, right: 20, bottom: 50, left: 70 };
 // const width = 800 - margin.left - margin.right;
@@ -44,10 +16,26 @@ const colorScatter = d3.scaleOrdinal(d3.schemeCategory10);
 // Variabel untuk mengontrol animasi
 let animationInterval;
 let isPaused = false;
-let currentYear = 2016;
+let currentYear = 2020;
+
+// Function to load CSV data
+function loadData(callback) {
+  d3.dsv(";", "uas1.csv").then(function (data) {
+    // Process the data
+    data.forEach(function (d) {
+      d["Wisatawan 2020"] = +d["Wisatawan 2020"];
+      d["Wisatawan 2021"] = +d["Wisatawan 2021"];
+      d["Wisatawan 2022"] = +d["Wisatawan 2022"];
+      d["PDRB 2020"] = +d["PDRB 2020"].replace(",", ".");
+      d["PDRB 2021"] = +d["PDRB 2021"].replace(",", ".");
+      d["PDRB 2022"] = +d["PDRB 2022"].replace(",", ".");
+    });
+    callback(data);
+  });
+}
 
 // Fungsi untuk membuat chart
-function createChart() {
+function createChart(dataScatter) {
   const svg = d3
     .select("#chart_scatter")
     .append("svg")
@@ -133,13 +121,10 @@ function createChart() {
   return Object.assign(svg.node(), { update });
 }
 
-// Membuat chart
-const chart = createChart();
-
 // Fungsi untuk mengontrol animasi
-function toggleAnimation() {
+function toggleAnimation(chart) {
   if (isPaused) {
-    startAnimation();
+    startAnimation(chart);
     d3.select("#pauseButton").text("Pause");
   } else {
     pauseAnimation();
@@ -148,9 +133,9 @@ function toggleAnimation() {
   isPaused = !isPaused;
 }
 
-function startAnimation() {
+function startAnimation(chart) {
   animationInterval = setInterval(() => {
-    currentYear = currentYear === 2023 ? 2016 : currentYear + 1;
+    currentYear = currentYear === 2022 ? 2020 : currentYear + 1;
     chart.update(currentYear);
   }, 1000);
 }
@@ -159,8 +144,33 @@ function pauseAnimation() {
   clearInterval(animationInterval);
 }
 
-// Menambahkan tombol pause
-d3.select("#chart_scatter").append("button").attr("id", "pauseButton").text("Pause").on("click", toggleAnimation);
+// Load data and create chart
+loadData(function (data) {
+  const years = [2020, 2021, 2022];
 
-// Memulai animasi
-startAnimation();
+  // Reformat the data for the scatter plot
+  const dataScatter = [];
+  data.forEach(function (d) {
+    years.forEach(function (year) {
+      dataScatter.push({
+        year: year,
+        name: d.Provinsi,
+        wisatawan: d[`Wisatawan ${year}`],
+        pdrb: d[`PDRB ${year}`],
+      });
+    });
+  });
+
+  // Create chart
+  const chart = createChart(dataScatter);
+
+  // Add pause button
+  d3.select("#chart_scatter")
+    .append("button")
+    .attr("id", "pauseButton")
+    .text("Pause")
+    .on("click", () => toggleAnimation(chart));
+
+  // Start animation
+  startAnimation(chart);
+});

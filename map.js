@@ -56,8 +56,7 @@ mapSvg
   .attr("text-anchor", "middle")
   .attr("dominant-baseline", "middle")
   .style("font-size", "30px")
-  .style("font-weight", "bold")
-  .text("Jumlah Wisatawan Nusantara Menurut Provinsi Awal");
+  .style("font-weight", "bold");
 
 // Buat grup untuk peta dan geser ke bawah untuk memberi ruang pada judul
 const mapGroup = mapSvg.append("g").attr("transform", `translate(0, ${titleHeight})`);

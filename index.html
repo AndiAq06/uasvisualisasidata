@@ -9,7 +9,7 @@
   </head>
   <body>
     <div class="header">
-      <h1><a href="/visualisasi.html">Home</a></h1>
+      <h1><a href="/visualisasi.html">Beranda</a></h1>
     </div>
     <div class="main-container">
       <div class="empty-column"></div>
@@ -36,6 +36,7 @@
             Choropleth adalah jenis peta tematik yang menggunakan perbedaan dalam pewarnaan atau pengisian untuk menunjukkan nilai statistik tertentu di berbagai wilayah geografis. Peta ini sering digunakan untuk menampilkan data yang
             terkait dengan wilayah administratif, seperti negara, negara bagian, provinsi, atau kotamadya.
           </p>
+          <h3>Jumlah Wisatawan Nusantara Menurut Provinsi Asal</h3>
           <div id="map"></div>
           <div id="tooltip"></div>
           <p>
@@ -67,15 +68,16 @@
             yang ingin ditampilkan. Fungsi pembaruan memperbarui grafik sesuai dengan provinsi yang dipilih.
           </p>
         </div>
-        <h2>Scatter Plot Animated: Wisatawan vs PDRB (2016-2023)</h2>
+        <h2>Scatter Plot Animated</h2>
         <div class="scatter_plot">
           <p>
             Scatter plot yang bergerak (animated scatter plot) adalah jenis scatter plot di mana titik-titik data bergerak atau berubah dari waktu ke waktu, sering kali untuk menunjukkan bagaimana data berubah sepanjang periode waktu
             tertentu. Ini sering digunakan untuk memperlihatkan tren atau perubahan data dari tahun ke tahun atau dari waktu ke waktu.
           </p>
+          <h3>Jumlah Wisatawan Nusantara VS PDRB</h3>
           <div id="chart_scatter"></div>
           <p>
-            Pembuatan visualisasi dimulai dengan menyiapkan data dummy yang mewakili jumlah wisatawan dan PDRB untuk tiga daerah dari tahun 2016 hingga 2023. Selanjutnya, dimensi dan margin untuk grafik ditentukan, diikuti dengan pembuatan
+            Pembuatan visualisasi dimulai dengan menyiapkan data dummy yang mewakili jumlah wisatawan dan PDRB untuk tiga daerah dari tahun 2020 hingga 2022. Selanjutnya, dimensi dan margin untuk grafik ditentukan, diikuti dengan pembuatan
             skala untuk sumbu x, y, ukuran lingkaran, dan warna. Fungsi utama createChart() dibuat untuk mengatur elemen SVG, sumbu, dan grup untuk lingkaran. Di dalam fungsi ini, metode update() didefinisikan untuk memperbarui visualisasi
             berdasarkan tahun yang dipilih.
           </p>
@@ -83,7 +85,7 @@
             Animasi diimplementasikan menggunakan setInterval, yang memanggil fungsi update() setiap detik. Tombol pause/resume ditambahkan untuk mengontrol animasi, dengan fungsi toggleAnimation() yang menghentikan atau melanjutkan
             animasi. Interaktivitas ditingkatkan dengan menambahkan event listener untuk mouseover dan mouseout pada setiap lingkaran, menampilkan tooltip saat kursor diarahkan ke titik data.
           </p>
-          <p>Terakhir, chart diinisialisasi dan animasi dimulai. Kode ini menghasilkan visualisasi yang dinamis dan informatif, menggambarkan tren pariwisata dan PDRB di tiga daerah Indonesia selama periode delapan tahun.</p>
+          <p>Terakhir, chart diinisialisasi dan animasi dimulai. Kode ini menghasilkan visualisasi yang dinamis dan informatif, menggambarkan tren pariwisata dan PDRB di provinsi Indonesia</p>
         </div>
       </div>
       <div class="empty-column"></div>
